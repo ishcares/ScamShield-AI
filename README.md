@@ -26,11 +26,7 @@
 
 ---
 
-## 🎥 Product Demo Video
 
-> **Interactive Walkthrough:** [Watch the 3-minute Video Demonstration](https://vimeo.com/1200506913?share=copy&fl=sv&fe=ci)
-
----
 
 ## 🏗️ Architecture
 
