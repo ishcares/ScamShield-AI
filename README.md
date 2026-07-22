@@ -1,15 +1,16 @@
-# ScamShield Agent 🛡️
-### *Autonomous Scam Detection Agent — Google Cloud Rapid Agent Hackathon 2026*
+# ScamShield AI Agent 🛡️
+### *Autonomous Payments Fraud & Social Engineering Detection Pipeline*
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Google ADK](https://img.shields.io/badge/Google%20ADK-Agent%20Builder-4285F4?logo=google-cloud)](https://cloud.google.com/products/agent-builder)
 [![MongoDB MCP](https://img.shields.io/badge/Partner-MongoDB%20Atlas%20MCP-00ED64?logo=mongodb)](https://www.mongodb.com/atlas)
 [![Gemini 2.5 Flash](https://img.shields.io/badge/AI-Gemini%202.5%20Flash-8B5CF6?logo=google)](https://deepmind.google/technologies/gemini/)
-[![Track](https://img.shields.io/badge/Track-MongoDB%20Partner%20Track-00ED64)](https://devpost.com)
 
 ---
 
-> **Every day, thousands of Indian students lose money to fake recruiters.** ScamShield Agent is an autonomous 6-step AI agent that detects recruitment scams, phishing, UPI fraud, and impersonation attacks — and generates a pre-filled cybercrime FIR complaint — in under 10 seconds.
+> **System Overview:** ScamShield AI is an autonomous, multi-step agentic pipeline designed to detect payment fraud, recruitment-based social engineering, phishing, and digital identity impersonation. The system processes suspicious text and transaction screenshots, executes context-aware threat intelligence lookups, calculates a weighted risk index, and generates structured security event reports in under 10 seconds.
+
+*Note: I designed the system architecture, routing pipelines, and E2E integration, utilizing AI-assisted execution for backend service components and frontend interface layouts.*
 
 ---
 
@@ -25,18 +26,16 @@
 
 ---
 
-## 🎥 Demo Video
+## 🎥 Product Demo Video
 
-> 
-
-[![Watch Demo](https://img.shields.io/badge/Watch-3min%20Demo%20Video-red?logo=youtube&style=for-the-badge)](https://vimeo.com/1200506913?share=copy&fl=sv&fe=ci)
+> **Interactive Walkthrough:** [Watch the 3-minute Video Demonstration](https://vimeo.com/1200506913?share=copy&fl=sv&fe=ci)
 
 ---
 
 ## 🏗️ Architecture
 
 ```
-[User: Text / WhatsApp Screenshot]
+[User Input: Text / WhatsApp Screenshot]
           │
           ▼
 [React Frontend] ──POST /api/analyze──► [Express.js Backend]
@@ -74,18 +73,18 @@
 
 ---
 
-## 🤖 Why This Is a Real Agent (Not Just a Chatbot)
+## 🤖 Core Agent Architecture (Multi-Step Reasoning & Tool Execution)
 
-The hackathon requires moving **beyond chat**. Here's how ScamShield Agent qualifies:
+Unlike passive chatbots, ScamShield operates as a true autonomous agent by executing a deterministic, stateful decision loop:
 
-| Requirement | How We Satisfy It |
+| Production Agent Standard | System Implementation |
 |---|---|
-| **Multi-step reasoning** | 6 discrete steps: extract → search → score → classify → store → escalate |
-| **Uses tools to accomplish tasks** | MongoDB MCP `aggregate` (vector search) + `insert-many` (persistence) |
-| **Google Cloud Agent Builder** | `google.adk.agents.Agent` with `Runner` + `InMemorySessionService` |
-| **Partner MCP integration** | `mongodb-mcp-server` via stdio JSON-RPC, spawned by ADK |
-| **Real-world problem** | India scam detection — ₹11,333 crore lost to cyber fraud in 2023 |
-| **Keeps user in control** | Streaming pipeline shows each step in real time; user downloads FIR |
+| **Multi-step reasoning** | 6-step discrete pipeline: Entity extraction → vector ledger lookup → trust index scoring → risk classification → persistence → escalation |
+| **Tool Calling & MCP Integration** | Intercepts reasoning steps to invoke MongoDB MCP `aggregate` (vector search) + `insert-many` (audit-trail persistence) |
+| **Google Cloud Agent Builder** | Standardized on `google.adk.agents.Agent` with `Runner` + `InMemorySessionService` for session-state isolation |
+| **Partner MCP integration** | Runs `mongodb-mcp-server` via stdio JSON-RPC, spawned dynamically by the ADK runtime environment |
+| **Resilient High-Uptime Design** | Automatic failover to direct Mongoose queries if the bridge or MCP service experiences cold starts or latency spikes |
+| **Real-time UX Control** | NDJSON streaming pipeline exposes live step-by-step security execution to the frontend dashboard |
 
 ---
 
@@ -93,9 +92,9 @@ The hackathon requires moving **beyond chat**. Here's how ScamShield Agent quali
 
 **Partner:** MongoDB Atlas MCP Server (`mongodb-mcp-server`)
 
-**How it's used — not just as a database, but as an agent tool:**
+The Model Context Protocol (MCP) server is registered directly inside the agent's toolset as an active capability, exposing database query primitives directly to the model's reasoning loop.
 
-1. **Step 2 — Vector Search via MCP `aggregate` tool:**
+1. **Vector-Based Threat Lookup (MCP `aggregate` tool):**
    ```json
    {
      "tool": "aggregate",
@@ -116,7 +115,7 @@ The hackathon requires moving **beyond chat**. Here's how ScamShield Agent quali
    }
    ```
 
-2. **Step 5 — Persistence via MCP `insert-many` tool:**
+2. **Telemetry Logging & Persistence (MCP `insert-many` tool):**
    ```json
    {
      "tool": "insert-many",
@@ -128,21 +127,17 @@ The hackathon requires moving **beyond chat**. Here's how ScamShield Agent quali
    }
    ```
 
-The MCP server is spawned as a child process via `StdioConnectionParams` inside the Google ADK toolset. If MCP fails, the system gracefully falls back to direct Mongoose queries — ensuring 100% uptime.
-
 ---
 
-## 💡 What Makes ScamShield Agent Unique
+## 💡 Key Architectural Features
 
-| Feature | Detail |
+| Feature | Technical Implementation |
 |---|---|
-| **OCR in Hindi + English** | Tesseract.js `eng+hin` — reads WhatsApp screenshots in Hinglish |
-| **1536-dim vector embeddings** | `gemini-embedding-2` → cosine similarity search in Atlas |
-| **FIR Template Generator** | `GET /api/fir/:reportId` → pre-filled cybercrime.gov.in complaint |
-| **Fast-track detection** | Keyword triggers bypass full pipeline for instant CRITICAL verdict |
-| **Streaming NDJSON** | Real-time step-by-step progress visible in frontend |
-| **Agent Status Panel** | Live badge showing ADK health + MCP connection in the UI |
-| **Bilingual scam database** | 5 seeded high-fidelity India scam report templates |
+| **Multilingual OCR Processing** | Tesseract.js `eng+hin` parses WhatsApp/SMS screenshots containing Hinglish dialect data |
+| **Vector Similarity Matcher** | Computes 1536-dimensional embeddings using `gemini-embedding-2` for semantic threat analysis |
+| **Fast-Track Risk Bypass** | Client-side and server-side regex check immediately flags critical scam keywords for instant escalation |
+| **NDJSON Event Streaming** | Express backend pipes real-time telemetry updates to client over standard HTTP stream response |
+| **High-Uptime Failover** | Direct Mongoose driver fallback protects runtime logic from MCP container startup latency |
 
 ---
 
@@ -186,8 +181,10 @@ cp .env .env.local
 
 ```bash
 python -m venv venv
-venv\Scripts\activate          # Windows
-# source venv/bin/activate     # Mac/Linux
+# Windows
+venv\Scripts\activate          
+# Mac/Linux
+# source venv/bin/activate     
 
 pip install -r requirements.txt
 python agent.py serve          # Starts FastAPI on :8080
@@ -222,7 +219,7 @@ npm run dev                    # Starts on :5173
 | `POST` | `/api/analyze` | 6-step NDJSON streaming analysis |
 | `GET` | `/api/reports` | Paginated ledger (filter by `riskLevel`) |
 | `GET` | `/api/reports/recent` | Last 10 scam reports |
-| `GET` | `/api/fir/:reportId` | Download pre-filled FIR complaint `.txt` |
+| `GET` | `/api/fir/:reportId` | Download pre-filled security incident report `.txt` |
 | `GET` | `/api/agent-status` | Live ADK + MCP health status |
 | `GET` | `/health` | Server + MongoDB connection status |
 
@@ -249,13 +246,14 @@ Create this index in **Atlas Search** on the `scamreports` collection:
 
 ---
 
-## 🇮🇳 India-Specific Features
+## 🌍 Regional Coverage and Localized Integration Details
 
-- **Hinglish OCR** — reads regional language scam screenshots
-- **Cybercrime.gov.in integration** — FIR template formatted for India's MHA portal
-- **1930 Helpline** — every CRITICAL report surfaces the national cyber crime hotline
-- **UPI fraud detection** — specific patterns for @paytm, @okaxis, @ybl UPI handles
-- **India-specific scam categories** — Onboarding Fee Fraud, Fake Internship, Task-Based Scam
+To demonstrate real-world applicability in targeted markets, the system includes deep coverage parameters for localized Indian fraud patterns:
+- **Hinglish OCR parsing** — decodes localized socio-linguistic patterns in messages
+- **Pre-filled Regulatory Incident Report generator** — outputs structured complaint files matching formatting specifications for India's Ministry of Home Affairs (MHA) cybercrime portal
+- **Hotline Escalar** — surfaces national consumer protection and cyber crime hotline routes (1930 Helpline)
+- **UPI payment handle heuristics** — flags specific high-volume digital wallet patterns (`@paytm`, `@okaxis`, `@ybl`)
+- **Localized scam classification taxonomy** — targets localized threats (Onboarding Fee Fraud, Task-Based scams, Fake Internships)
 
 ---
 
